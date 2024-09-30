@@ -168,7 +168,7 @@ async function createCert(name, type) {
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
 
-    ctx.fillText(name, centerX, centerY + 90);
+    ctx.fillText(name, centerX, centerY);
 
     if (type === 'local') {
         return createLocalCert(name, canvas); // Return the file path
