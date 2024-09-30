@@ -26,13 +26,17 @@ app.get('/', (req, res) => {
 
 app.post('/generate', async (req, res) => {
     const { name, email } = req.body;
+    const certFilePath = await createCert(capitalizeEachWord(name), 'local'); // Generate cert and get the path
 
-    // Call the function to create the certificate
-    await createCert(capitalizeEachWord(name), 'local');
-    // Optionally, send an email if desired here
-
-    res.send(`Certificate for ${name} has been generated.`);
+    // Use res.download to trigger the file download
+    res.download(certFilePath, `${capitalizeEachWord(name)}-Techniki-Certificate.png`, (err) => {
+        if (err) {
+            console.error("Error downloading the file:", err);
+            res.status(500).send("Error downloading the certificate.");
+        }
+    });
 });
+
 
 let certPrompts = [{
     type: "input",
@@ -147,41 +151,46 @@ function capitalizeEachWord(str) {
 }
 
 async function createCert(name, type) {
-    //TODO You may remove this if you dont need custom fonts and canvas will use its default font 'arial'
-    registerFont('src/fonts/GreatVibes-Regular.ttf', { family: 'Great Vibes' })
+    registerFont('src/fonts/GreatVibes-Regular.ttf', { family: 'Great Vibes' });
 
     const certImage = await loadImage(certInfo.certFilePath);
     const canvas = createCanvas(certImage.width, certImage.height);
     const ctx = canvas.getContext('2d');
     ctx.drawImage(certImage, 0, 0, canvas.width, canvas.height);
 
-    //TODO Change font style to your needs.
     ctx.font = '100px "Great Vibes"';
     ctx.fillStyle = '#000000';
     ctx.textAlign = 'center';
-    
-    // Calculate text width and set position to center
+
     const textWidth = ctx.measureText(name).width;
     const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2; // Adjust based on your image height
+    const centerY = canvas.height / 2;
 
-    // Draw the text centered
-    ctx.fillText(name, centerX, centerY + 90); // Adjust the offset as needed for vertical positioning
+    ctx.fillText(name, centerX, centerY + 90);
 
     if (type === 'local') {
-        createLocalCert(name, canvas)
+        return createLocalCert(name, canvas); // Return the file path
     } else if (type === 'email') {
-        //This returns a base64 encoded image
         return canvas.toDataURL();
     }
 }
 
 async function createLocalCert(name, canvas) {
-    if (!existsSync(__dirname + '/cert/')) {
-        mkdirSync(__dirname + '/cert/');
+    const dir = __dirname + '/cert/';
+    if (!existsSync(dir)) {
+        mkdirSync(dir);
     }
-    const out = createWriteStream(__dirname + `/cert/${name}.png`)
-    const stream = canvas.createPNGStream()
-    stream.pipe(out)
-    out.on('finish', () => console.log(`Certificate of ${name} was created.`))
+    
+    const filePath = `${dir}${name}.png`;
+    const out = createWriteStream(filePath);
+    const stream = canvas.createPNGStream();
+    
+    stream.pipe(out);
+    return new Promise((resolve, reject) => {
+        out.on('finish', () => {
+            console.log(`Certificate of ${name} was created.`);
+            resolve(filePath); // Resolve the promise with the file path
+        });
+        out.on('error', reject); // Handle any error
+    });
 }
