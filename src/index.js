@@ -43,6 +43,20 @@ let message;
 let certInfo;
 let emailInfo;
 
+const fs = require('fs');
+
+// Read valid emails from verify.txt
+async function loadValidEmails() {
+    const data = await fs.promises.readFile('verify.txt', 'utf-8');
+    return data.split('\n').map(email => email.trim());
+}
+
+// Check if the email is valid
+async function isValidEmail(email) {
+    const validEmails = await loadValidEmails();
+    return validEmails.includes(email);
+}
+
 // Serve the HTML form from the public folder
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/index.html'); // Send the HTML file
@@ -50,6 +64,13 @@ app.get('/', (req, res) => {
 
 app.post('/generate', async (req, res) => {
     const { name, email } = req.body;
+
+    // Check if the email is in the list of valid emails
+    const validEmail = await isValidEmail(email);
+    if (!validEmail) {
+        return res.status(400).send("Email is not valid for certificate generation.");
+    }
+
     const certFilePath = await createCert(capitalizeEachWord(name), 'local'); // Generate cert and get the path
 
     // Use res.download to trigger the file download
