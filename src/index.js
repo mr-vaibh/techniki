@@ -43,8 +43,6 @@ let message;
 let certInfo;
 let emailInfo;
 
-const fs = require('fs');
-
 // Read valid emails from verify.txt
 async function loadValidEmails() {
     const data = await fs.promises.readFile('verify.txt', 'utf-8');
