@@ -122,7 +122,7 @@ function capitalizeEachWord(str) {
 
 async function createCert(name, type) {
     //TODO You may remove this if you dont need custom fonts and canvas will use its default font 'arial'
-    registerFont('src/fonts/SegoePro-Regular.ttf', { family: 'Segoe Pro' })
+    registerFont('src/fonts/GreatVibes-Regular.ttf', { family: 'Great Vibes' })
 
     const certImage = await loadImage(certInfo.certFilePath);
     const canvas = createCanvas(certImage.width, certImage.height);
@@ -130,11 +130,17 @@ async function createCert(name, type) {
     ctx.drawImage(certImage, 0, 0, canvas.width, canvas.height);
 
     //TODO Change font style to your needs.
-    ctx.font = '100px "Segoe Pro"';
-    ctx.fillStyle = '#0078D4';
-    ctx.textAlign = 'left';
-    //TODO Position your attendee name based on your template
-    ctx.fillText(name, 110, 680);
+    ctx.font = '100px "Great Vibes"';
+    ctx.fillStyle = '#000000';
+    ctx.textAlign = 'center';
+    
+    // Calculate text width and set position to center
+    const textWidth = ctx.measureText(name).width;
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2; // Adjust based on your image height
+
+    // Draw the text centered
+    ctx.fillText(name, centerX, centerY + 90); // Adjust the offset as needed for vertical positioning
 
     if (type === 'local') {
         createLocalCert(name, canvas)
