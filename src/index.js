@@ -1,15 +1,37 @@
+const https = require('https');
+const http = require('http');  // For development (non-HTTPS)
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors'); // Import the cors package
-const { promises: fs, mkdirSync, existsSync, createReadStream, createWriteStream } = require('fs');
+const { promises: fs, mkdirSync, existsSync, createReadStream, createWriteStream, readFileSync } = require('fs');
 require('dotenv').config();
 const { createTransport } = require('nodemailer');
 const { registerFont, createCanvas, loadImage } = require('canvas');
 const csv = require('csv-parser');
 const inquirer = require('inquirer');
 
+// Check if the environment is development or production
+const isProduction = process.env.NODE_ENV === 'production';
+
 const app = express();
 const port = 3000;
+
+// If in production, configure HTTPS options
+let server;
+if (isProduction) {
+  const options = {
+    key: fs.readFileSync('/etc/ssl/private/selfsigned.key'),
+    cert: fs.readFileSync('/etc/ssl/private/selfsigned.crt')
+  };
+
+  // Create HTTPS server in production
+  server = https.createServer(options, app);
+  console.log('Running in production with HTTPS.');
+} else {
+  // For development, create an HTTP server
+  server = http.createServer(app);
+  console.log('Running in development with HTTP (no SSL).');
+}
 
 app.use(cors()); // Use CORS middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -90,8 +112,9 @@ async function main() {
 
 main();
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+// Listen on port 3000
+server.listen(3000, () => {
+    console.log(`Server is running on ${isProduction ? 'https' : 'http'}://localhost:3000`);
 });
 
 async function readMessageTxt() {
