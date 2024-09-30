@@ -11,6 +11,7 @@ const app = express();
 const port = 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public')); // Serve static files from the public directory
 
 const extractedCSV = [];
 
@@ -18,19 +19,9 @@ let message;
 let certInfo;
 let emailInfo;
 
-// Serve a simple HTML form
+// Serve the HTML form from the public folder
 app.get('/', (req, res) => {
-    res.send(`
-        <form action="/generate" method="post">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-            <br>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <br>
-            <input type="submit" value="Generate Certificate">
-        </form>
-    `);
+    res.sendFile(__dirname + '/public/index.html'); // Send the HTML file
 });
 
 app.post('/generate', async (req, res) => {
