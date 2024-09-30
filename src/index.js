@@ -1,16 +1,47 @@
-const { promises: fs, mkdirSync, existsSync, createReadStream, createWriteStream } = require('fs')
-
+const express = require('express');
+const bodyParser = require('body-parser');
+const { promises: fs, mkdirSync, existsSync, createReadStream, createWriteStream } = require('fs');
 require('dotenv').config();
 const { createTransport } = require('nodemailer');
 const { registerFont, createCanvas, loadImage } = require('canvas');
 const csv = require('csv-parser');
 const inquirer = require('inquirer');
 
+const app = express();
+const port = 3000;
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
 const extractedCSV = [];
 
 let message;
 let certInfo;
 let emailInfo;
+
+// Serve a simple HTML form
+app.get('/', (req, res) => {
+    res.send(`
+        <form action="/generate" method="post">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <br>
+            <input type="submit" value="Generate Certificate">
+        </form>
+    `);
+});
+
+app.post('/generate', async (req, res) => {
+    const { name, email } = req.body;
+
+    // Call the function to create the certificate
+    await createCert(capitalizeEachWord(name), 'local');
+    // Optionally, send an email if desired here
+
+    res.send(`Certificate for ${name} has been generated.`);
+});
 
 let certPrompts = [{
     type: "input",
@@ -61,6 +92,10 @@ async function main() {
 }
 
 main();
+
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
 
 async function readMessageTxt() {
     let file = await fs.readFile(emailInfo.messageFilePath, 'utf8');
