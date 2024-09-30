@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors'); // Import the cors package
 const { promises: fs, mkdirSync, existsSync, createReadStream, createWriteStream } = require('fs');
 require('dotenv').config();
 const { createTransport } = require('nodemailer');
@@ -10,6 +11,7 @@ const inquirer = require('inquirer');
 const app = express();
 const port = 3000;
 
+app.use(cors()); // Use CORS middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public')); // Serve static files from the public directory
 
