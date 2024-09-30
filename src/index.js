@@ -20,8 +20,8 @@ const port = 3000;
 let server;
 if (isProduction) {
   const options = {
-    key: fs.readFileSync('/etc/ssl/private/selfsigned.key'),
-    cert: fs.readFileSync('/etc/ssl/private/selfsigned.crt')
+    key: readFileSync('/etc/ssl/private/selfsigned.key'),
+    cert: readFileSync('/etc/ssl/private/selfsigned.crt')
   };
 
   // Create HTTPS server in production
