@@ -45,7 +45,7 @@ let emailInfo;
 
 // Read valid emails from verify.txt
 async function loadValidEmails() {
-    const data = await fs.promises.readFile('verify.txt', 'utf-8');
+    const data = await fs.readFile('src/verify.txt', 'utf-8');
     return data.split('\n').map(email => email.trim());
 }
 
