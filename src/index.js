@@ -136,9 +136,9 @@ async function main() {
 
 main();
 
-// Listen on port 3000
-server.listen(3000, () => {
-    console.log(`Server is running on ${isProduction ? 'https' : 'http'}://localhost:3000`);
+// Listen on port
+server.listen(port, () => {
+    console.log(`Server is running on ${isProduction ? 'https' : 'http'}://localhost:${port}`);
 });
 
 async function readMessageTxt() {
