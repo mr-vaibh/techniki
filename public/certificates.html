@@ -141,9 +141,12 @@
                         alert('Certificate generated successfully!');
                     },
                     error: function (xhr, status, error) {
-                        alert(error);
-                        console.error('Error submitting form:', error);
-                        $('#errorMessage').removeClass('hidden'); // Show error message
+                        if (xhr.status == 400) {
+                            alert("Email is not valid. Please verify that your email matches your registration.")
+                        } else {
+                            alert("Error occured")
+                        }
+                        console.error(xhr);
                     }
                 });
             });

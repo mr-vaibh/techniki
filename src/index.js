@@ -117,21 +117,21 @@ async function main() {
         .pipe(csv())
         .on('data', (data) => extractedCSV.push(data));
 
-    let answer = await inquirer.prompt({
-        type: "list",
-        name: "type",
-        message: "Do you want to generate certificate locally or generate certificate and automatically send to their emails?",
-        choices: ["Generate Locally", "Generate and send email automatically"]
-    });
+    // let answer = await inquirer.prompt({
+    //     type: "list",
+    //     name: "type",
+    //     message: "Do you want to generate certificate locally or generate certificate and automatically send to their emails?",
+    //     choices: ["Generate Locally", "Generate and send email automatically"]
+    // });
 
-    if (answer.type === "Generate Locally") {
-        for (var index in extractedCSV) {
-            await createCert(capitalizeEachWord(extractedCSV[index].name), 'local')
-        }
-    } else {
-        emailInfo = await inquirer.prompt(emailPrompts);
-        sendEmail();
-    }
+    // if (answer.type === "Generate Locally") {
+    //     for (var index in extractedCSV) {
+    //         await createCert(capitalizeEachWord(extractedCSV[index].name), 'local')
+    //     }
+    // } else {
+    //     emailInfo = await inquirer.prompt(emailPrompts);
+    //     sendEmail();
+    // }
 }
 
 main();
