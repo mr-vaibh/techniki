@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
+    <title>Techनिकी</title>
+    <link rel="icon" type="image/x-icon" href="assets/images/logo.ico">
+    <!-- Font -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- script -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="scripts.js"></script>
+    <!-- VANTA.NET scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.21/vanta.net.min.js"></script>
+
+</head>
+
+<body class="font-lato" id="vanta-bg">
+
+    <header class="bg-gray-800 text-white flex items-center justify-between py-3 px-4"
+        style="background-color: rgba(255, 255, 255, 0.1);">
+        <div class="flex items-center space-x-4">
+            <a href="index" class="flex items-center space-x-2">
+                <img src="logo.png" alt="Logo" class="h-9">
+            </a>
+        </div>
+        <nav id="navbar" class="hidden md:block">
+            <ul class="flex items-center space-x-4">
+                <li><a href="events">Events</a></li>
+                <li><a href="certificates">Certificates</a></li>
+                <li><a href="team">Team</a></li>
+                <li><a href="blog">Blogs</a></li>
+                <li><a href="projects">Projects</a></li>
+                <li><a href="#footer">Contact Us</a></li>
+            </ul>
+        </nav>
+        <div class="flex items-center space-x-4">
+            <div class="join-now text-center py-2 px-4 text-lg font-bold rounded cursor-pointer">
+                <a href="form">JOIN NOW!</a>
+            </div>
+            <button class="md:hidden" id="menu-button">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+    <div id="mobile-menu" class="hidden md:hidden bg-gray-800 text-white py-3 px-4"
+        style="background-color: rgba(255, 255, 255, 0.1);">
+        <ul class="flex flex-col items-center space-y-2">
+            <li><a href="events">Events</a></li>
+            <li><a href="certificates">Certificates</a></li>
+            <li><a href="team">Team</a></li>
+            <li><a href="blog">Blogs</a></li>
+            <li><a href="projects">Projects</a></li>
+            <li><a href="#footer">Contact Us</a></li>
+        </ul>
+    </div>
+
+    <main class="container mx-auto mt-5 flex justify-center mb-5">
+        <form id="eventForm" class="w-full max-w-lg">
+            <div class="container mx-auto mt-10">
+                <h2 class="text-4xl font-bold text-center mb-5">Events & Workshops</h2>
+                <div class="mb-4">
+                    <label class="text-2xl font-bold mb-10" for="name">Name</label>
+                    <input
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="name" type="text" name="name" required>
+                </div>
+                <div class="mb-4">
+                    <label class="text-2xl font-bold mb-10" for="email">Email</label>
+                    <input
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="email" type="email" name="email" required>
+                </div>
+                <div class="mb-4">
+                    <label class="text-2xl font-bold mb-10" for="event">Event</label>
+                    <select
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-5"
+                        id="event" name="event" required>
+                        <option value="Capture The Flag">Ethical Hacking Workshop</option>
+                        <option value="Capture The Flag">Capture The Flag</option>
+                        <option value="InnovaThon">InnovaThon</option>
+                    </select>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button
+                        class="join-now text-center py-2 px-4 text-lg font-bold rounded cursor-pointer bg-blue-500 text-white hover:bg-blue-700 mb-5"
+                        type="submit">Submit</button>
+                </div>
+                <div id="errorMessage" class="mt-4 text-red-500 text-center hidden mb-5">Error 405: Please contact the
+                    event manager.</div>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        $(document).ready(function () {
+            $('#eventForm').on('submit', function (event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                // Create an object to hold the form data
+                const formData = {
+                    name: $('#name').val(),
+                    email: $('#email').val()
+                };
+
+                // Convert the object into a URL-encoded string
+                const encodedData = $.param(formData);
+
+                // Send the POST request using jQuery
+                $.ajax({
+                    url: 'https://170.64.147.213:3000/generate', // Your endpoint
+                    type: 'POST',
+                    contentType: 'application/x-www-form-urlencoded', // Set content type
+                    data: encodedData, // Send the encoded data
+                    xhrFields: {
+                        responseType: 'blob' // Specify the response type as blob
+                    },
+                    success: function (response) {
+                        const url = window.URL.createObjectURL(response);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `${formData.name}-Techniki-Certificate.png`; // Set the filename for download
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        setTimeout(() => window.URL.revokeObjectURL(url), 100);
+                        alert('Certificate generated successfully!');
+                    },
+                    error: function (xhr, status, error) {
+                        alert(error);
+                        console.error('Error submitting form:', error);
+                        $('#errorMessage').removeClass('hidden'); // Show error message
+                    }
+                });
+            });
+
+            // Mobile menu toggle
+            $('#menu-button').on('click', function () {
+                $('#mobile-menu').toggleClass('hidden');
+            });
+        });
+    </script>
+    <footer id="footer" class="bg-gray-900 text-white py-8" style="background-color: rgba(255, 255, 255, 0.1);">
+        <div class="container mx-auto flex flex-wrap justify-around">
+            <div class="max-w-md mb-6">
+                <h5 class="font-bold mb-4"><a href="index" class="flex items-center space-x-2">
+                        <img src="logo.png" alt="Logo" class="h-9">
+                    </a></h5>
+                <p>Techniki was founded with an aim of building an all inclusive community which empowers every
+                    individual to learn, connect and build together.</p>
+            </div>
+            <div class="mb-6">
+                <h5 class="font-bold mb-4">Quick Links</h5>
+                <div id="quick-links-container" class="flex space-x-4">
+                    <ul id="quick-links-col1"></ul>
+                    <ul id="quick-links-col2"></ul>
+                </div>
+            </div>
+            <div class="mb-6">
+                <h5 class="font-bold mb-4">Contact Us</h5>
+                <p><a href="mailto:techniki@ggn.amity.edu" class="hover:underline">techniki@ggn.amity.edu</a></p>
+                <div class="flex space-x-4 mt-4">
+                    <a href="https://www.instagram.com/technikiatauh/" target="_blank" class="hover:underline">
+                        <i class="fab fa-instagram h-6"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/company/technikiauh" target="_blank" class="hover:underline">
+                        <i class="fab fa-linkedin h-6"></i>
+                    </a>
+                    <a href="https://discord.gg/jxt2fZG4jM" target="_blank" class="hover:underline">
+                        <i class="fab fa-discord h-6"></i>
+                    </a>
+                    <a href="https://chat.whatsapp.com/BVCtubt4o6pLJcfPAYdBO5" target="_blank" class="hover:underline">
+                        <i class="fab fa-whatsapp h-6"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-8">
+            <p>&copy; Techनिकी</p>
+        </div>
+    </footer>
+    <script>
+        VANTA.NET({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x0,
+            backgroundColor: 0x363636,
+            points: 20.00,
+            maxDistance: 23.00,
+            spacing: 20.00
+        })
+
+
+        document.getElementById('menu-button').addEventListener('click', function () {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+    </script>
+</body>
+
+</html>

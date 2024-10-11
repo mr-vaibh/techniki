@@ -2,6 +2,7 @@ const https = require('https');
 const http = require('http');  // For development (non-HTTPS)
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
 const cors = require('cors'); // Import the cors package
 const { promises: fs, mkdirSync, existsSync, createReadStream, createWriteStream, readFileSync } = require('fs');
 require('dotenv').config();
@@ -106,7 +107,11 @@ let emailPrompts = [{
 ];
 
 async function main() {
-    certInfo = await inquirer.prompt(certPrompts);
+    // Hardcoded file paths for CSV and certificate image
+    certInfo = {
+        csvFilePath: 'src/csv/names.csv',
+        certFilePath: 'src/template/certificate.png'
+    };
 
     createReadStream(certInfo.csvFilePath)
         .pipe(csv())

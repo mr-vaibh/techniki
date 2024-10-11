@@ -1,0 +1,91 @@
+/* index.html */
+
+
+/* font */
+.font-lato {
+    font-family: 'Lato', sans-serif;
+}
+
+/* Join botton */
+.join-now {
+    background-color: #dda921;
+    color: black;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.join-now:hover {
+    background-color: #dda950;
+    color: white;
+}
+
+/* footer nav*/
+#quick-links-container {
+    display: flex;
+    gap: 20px;
+}
+
+#quick-links-col1, #quick-links-col2 {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* team */
+.team-member {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.team-member:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+.team-member img {
+    transition: transform 0.3s;
+}
+.team-member:hover img {
+    transform: scale(1.1);
+}
+.team-member img {
+    aspect-ratio: 1 / 1; /* Ensures the images have the same aspect ratio */
+}
+
+
+body {
+    color: #FFFFFF; /* Change the body text color to white */
+}
+header, footer {
+    background: rgba(255, 255, 255, 0.1); /* Transparent glass effect */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #FFFFFF; /* Ensure the header and footer text is white */
+}
+.team-member {
+    transition: transform 0.3s, box-shadow 0.3s;
+    color: #FFFFFF; /* Ensure the text within team-member is white */
+}
+.team-member:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+.team-member img {
+    transition: transform 0.3s;
+}
+.team-member:hover img {
+    transform: scale(1.1);
+}
+.team-member img {
+    aspect-ratio: 1 / 1; /* Ensures the images have the same aspect ratio */
+}
+
+
+.team-member {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+}
+nav a, .team-member p, .team-member h3, .team-member a {
+    color: #FFFFFF; /* Ensure all links and text are white */
+}
+nav a:hover, .team-member a:hover {
+    color: #FFD700; /* Change hover color to gold for better visibility */
+}
+h2, h3, p, a, ul, li {
+    font-family: 'Lato', sans-serif;
+    color: #FFFFFF; /* Ensure all text is white */
+}
