@@ -1,12 +1,7 @@
 // netlify/functions/generateCertificate.js
 
-const { promises: fs, mkdirSync, existsSync, createReadStream, createWriteStream, readFileSync } = require('fs');
-const { createTransport } = require('nodemailer');
+const { promises: fs } = require('fs');
 const { registerFont, createCanvas, loadImage } = require('canvas');
-const csv = require('csv-parser');
-
-let extractedCSV = [];
-let certInfo;
 
 // Load valid emails from verify.txt
 async function loadValidEmails() {
@@ -39,11 +34,8 @@ exports.handler = async (event) => {
         };
     }
 
-    const certFilePath = await createCert(capitalizeEachWord(name));
+    const fileBuffer = await createCert(capitalizeEachWord(name));
     
-    // Read the generated certificate as a buffer
-    const fileBuffer = await fs.readFile(certFilePath);
-
     return {
         statusCode: 200,
         headers: {
@@ -55,9 +47,8 @@ exports.handler = async (event) => {
     };
 };
 
-// Your existing functions like createCert, createLocalCert, capitalizeEachWord, etc.
-
-async function createCert(name, type) {
+// Function to create the certificate and return the image buffer
+async function createCert(name) {
     registerFont('src/fonts/GreatVibes-Regular.ttf', { family: 'Great Vibes' });
 
     const certImage = await loadImage('src/template/certificate.png');
@@ -74,26 +65,15 @@ async function createCert(name, type) {
 
     ctx.fillText(name, centerX, centerY);
 
-    return createLocalCert(name, canvas);
-}
-
-async function createLocalCert(name, canvas) {
-    const dir = __dirname + '/cert/';
-    if (!existsSync(dir)) {
-        mkdirSync(dir);
-    }
-
-    const filePath = `${dir}${name}.png`;
-    const out = createWriteStream(filePath);
-    const stream = canvas.createPNGStream();
-    
+    // Return the PNG buffer instead of saving it
     return new Promise((resolve, reject) => {
-        stream.pipe(out);
-        out.on('finish', () => {
-            console.log(`Certificate of ${name} was created.`);
-            resolve(filePath);
-        });
-        out.on('error', reject);
+        canvas.toBuffer((err, buffer) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(buffer);
+            }
+        }, 'image/png');
     });
 }
 
