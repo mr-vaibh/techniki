@@ -19,20 +19,8 @@ const port = process.env.PORT || 3000;
 
 // If in production, configure HTTPS options
 let server;
-if (isProduction) {
-  const options = {
-    key: readFileSync('/etc/ssl/private/selfsigned.key'),
-    cert: readFileSync('/etc/ssl/private/selfsigned.crt')
-  };
-
-  // Create HTTPS server in production
-  server = https.createServer(options, app);
-  console.log('Running in production with HTTPS.');
-} else {
-  // For development, create an HTTP server
-  server = http.createServer(app);
-  console.log('Running in development with HTTP (no SSL).');
-}
+server = http.createServer(app);
+console.log('Running in development with HTTP (no SSL).');
 
 app.use(cors()); // Use CORS middleware
 app.use(bodyParser.urlencoded({ extended: true }));
