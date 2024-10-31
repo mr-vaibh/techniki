@@ -118,14 +118,14 @@
                 };
 
                 // Convert the object into a URL-encoded string
-                const encodedData = $.param(formData);
+                // const encodedData = $.param(formData);
 
                 // Send the POST request using jQuery
                 $.ajax({
-                    url: '/generate', // Your endpoint
+                    url: '/.netlify/functions/generateCertificate', // Your endpoint
                     type: 'POST',
-                    contentType: 'application/x-www-form-urlencoded', // Set content type
-                    data: encodedData, // Send the encoded data
+                    contentType: 'application/json', // Set content type
+                    data: JSON.stringify(formData), // Send the encoded data
                     xhrFields: {
                         responseType: 'blob' // Specify the response type as blob
                     },
