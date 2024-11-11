@@ -4,7 +4,7 @@ import { registerFont, createCanvas, loadImage } from 'canvas';
 import path from 'path';
 
 const verifyFilePath = path.resolve('./src/verify.txt');
-const certTemplatePath = path.resolve('./src/template/certificate.png');
+// const certTemplatePath = path.resolve('./src/template/Ethical-Hacking-Workshop.png');
 const fontPath = path.resolve('./src/fonts/GreatVibes-Regular.ttf');
 
 async function loadValidEmails() {
@@ -19,7 +19,7 @@ async function isValidEmail(email) {
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
-        const { name, email } = req.body;
+        const { name, email, event } = req.body;
 
         // Validate email
         const validEmail = await isValidEmail(email);
@@ -28,7 +28,7 @@ export default async function handler(req, res) {
         }
 
         // Generate the certificate
-        const certFilePath = await createCert(capitalizeEachWord(name), 'local');
+        const certFilePath = await createCert(capitalizeEachWord(name), event,'local');
 
         // Stream the certificate file back to the client
         const fileStream = createReadStream(certFilePath);
@@ -47,8 +47,10 @@ export default async function handler(req, res) {
     }
 }
 
-async function createCert(name, type) {
+async function createCert(name, eventCertificateTemplate, type) {
     registerFont(fontPath, { family: 'Great Vibes' });
+
+    const certTemplatePath = path.resolve(`./src/template/${eventCertificateTemplate}`);
 
     const certImage = await loadImage(certTemplatePath);
     const canvas = createCanvas(certImage.width, certImage.height);
