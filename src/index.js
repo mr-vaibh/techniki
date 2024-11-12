@@ -5,8 +5,8 @@ import path from 'path';
 // const verifyFilePath = path.resolve('./src/verify.txt');
 // const certTemplatePath = path.resolve('./src/template/Ethical-Hacking-Workshop.png');
 
-// Path to the verify folder
-const verifyFolderPath = path.resolve('./src/verify');
+// Path to the public directory where CSV files are stored
+const verifyFolderPath = path.join(process.cwd(), 'public', 'verify');
 const fontPath = path.resolve('./src/fonts/GreatVibes-Regular.ttf');
 
 async function loadValidEmails(event) {
