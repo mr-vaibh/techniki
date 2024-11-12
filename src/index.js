@@ -1,35 +1,25 @@
 import { promises as fs, createReadStream, createWriteStream } from 'fs';
 import { registerFont, createCanvas, loadImage } from 'canvas';
 import path from 'path';
+import { parse } from 'csv-parse';
 
-// const verifyFilePath = path.resolve('./src/verify.txt');
 // const certTemplatePath = path.resolve('./src/template/Ethical-Hacking-Workshop.png');
-
-// Path to the public directory where CSV files are stored
-const verifyFolderPath = path.join(process.cwd(), 'public', 'verify');
 const fontPath = path.resolve('./src/fonts/GreatVibes-Regular.ttf');
 
 async function loadValidEmails(event) {
-    // Path to the specific CSV file based on the event
-    const filePath = path.join(verifyFolderPath, `${event}.csv`);
-
-    try {
-        // Use fs.promises.access to check if the file exists
-        await fs.promises.access(filePath, fs.constants.F_OK);
-    } catch (error) {
-        throw new Error(`Event file ${event}.csv does not exist.`);
-    }
+    const verifyFilePath = path.resolve(`./src/verify/${event}.csv`);
 
     // Read the CSV file asynchronously and parse it
-    const data = await fs.promises.readFile(filePath, 'utf-8');
+    const data = await fs.readFile(verifyFilePath, 'utf-8');
     const records = [];
 
     return new Promise((resolve, reject) => {
-        csvParse(data, { delimiter: ',', trim: true }, (err, output) => {
+        // Use the parse function from csv-parse
+        parse(data, { delimiter: ',', trim: true }, (err, output) => {
             if (err) {
                 reject("Error parsing CSV file");
             } else {
-                // Create a Set of emails for faster lookup
+                // Loop through the records and build a list of valid emails
                 for (const [name, email] of output) {
                     if (email) {
                         records.push({ name, email });
@@ -120,7 +110,7 @@ async function createLocalCert(name, canvas) {
     const filePath = `${dir}${name}.png`;
     const out = createWriteStream(filePath);
     const stream = canvas.createPNGStream();
-
+    
     return new Promise((resolve, reject) => {
         stream.pipe(out);
         out.on('finish', () => {
