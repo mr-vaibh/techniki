@@ -12,9 +12,11 @@ const fontPath = path.resolve('./src/fonts/GreatVibes-Regular.ttf');
 async function loadValidEmails(event) {
     // Path to the specific CSV file based on the event
     const filePath = path.join(verifyFolderPath, `${event}.csv`);
-    
-    // Check if the file exists
-    if (!fs.existsSync(filePath)) {
+
+    try {
+        // Use fs.promises.access to check if the file exists
+        await fs.promises.access(filePath, fs.constants.F_OK);
+    } catch (error) {
         throw new Error(`Event file ${event}.csv does not exist.`);
     }
 
@@ -44,7 +46,7 @@ async function isValidEmail(name, email, event) {
 
     // Check if email exists in the valid list
     const user = validEmails.find(user => user.email === email);
-    
+
     // If name in CSV is "null", we check if we match the email regardless of the name
     if (user) {
         // If name in the CSV is "null", use the provided name from the request
@@ -118,7 +120,7 @@ async function createLocalCert(name, canvas) {
     const filePath = `${dir}${name}.png`;
     const out = createWriteStream(filePath);
     const stream = canvas.createPNGStream();
-    
+
     return new Promise((resolve, reject) => {
         stream.pipe(out);
         out.on('finish', () => {
